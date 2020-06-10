@@ -142,6 +142,23 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
     		String titleBar = "ahihi";
     		JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
     	}
+    	
+    	if(e.getActionCommand().equals("add")){
+    		try (FileOutputStream fos = new FileOutputStream(STORAGE_FILE);
+    	             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+
+    	            // Create a Book instance. This book object then will be stored in
+    	            // the file.
+    	            Publication book = new Publication("0-07-222565-3","Hacking Exposed J2EE & Java",1);
+
+    	            // By using writeObject() method of the ObjectOutputStream we can
+    	            // make the book object persistent on the books.dat file.
+    	            oos.writeObject(book);
+    	        } catch (IOException err) {
+    	            err.printStackTrace();
+    	        }
+
+    	}
     }
     
     /**
