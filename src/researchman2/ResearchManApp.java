@@ -109,9 +109,7 @@ public class ResearchManApp extends WindowAdapter implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO: complete this code
-    	System.out.println(e.getActionCommand());
-    	String action = e.getActionCommand();
+        String action = e.getActionCommand();
     	switch(action){
     		case "All Publications":
     			pman.showPublications();

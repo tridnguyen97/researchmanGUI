@@ -54,7 +54,8 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
     // view components
     private JFrame gui;
     // more view components here
-    JTextField text1,text2,text3;
+    JTextField tfDoi,tfTitle,tfYop,tfJournal;
+    JLabel lb1,lb2,lb3,lb4,lb5;
     JComboBox cb;
 
     /**
@@ -62,7 +63,7 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
      *          {@link #createGUI()}: create <tt>gui</tt>
      */
     public PublicationManager() {
-    	// TODO: complete this code
+    	createGUI();
     }
 
     /**
@@ -73,8 +74,7 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
     public void createGUI() {
         // TODO: complete this code
     	this.gui = new JFrame();
-    	JLabel lb1,lb2,lb3,lb4;
-    	lb1 = new JLabel("Publication type:");
+    	this.lb1 = new JLabel("Publication type:");
     	lb1.setBounds(10,50,100,40);
     	lb2 = new JLabel("Doi: (*)");
     	lb2.setBounds(10,100,100,40);
@@ -82,43 +82,54 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
     	lb3.setBounds(10,150,100,40);
     	lb4 = new JLabel("Year of publication: (*)");
     	lb4.setBounds(10,200,150,40);
+    	lb5 = new JLabel("Journal Title");
+    	this.lb5.setBounds(10,250,100,40);
+    	this.lb5.setVisible(false);
+    	
 
-    	this.text1 = new JTextField();
-    	this.text1.setBounds(150,100,200,40);
-    	this.text2 = new JTextField();
-    	this.text2.setBounds(150,150,200,40);
-    	this.text3 = new JTextField();
-    	this.text3.setBounds(150,200,200,40);
+    	this.tfDoi = new JTextField();
+    	this.tfDoi.setBounds(150,100,200,40);
+    	this.tfTitle = new JTextField();
+    	this.tfTitle.setBounds(150,150,200,40);
+    	this.tfYop = new JTextField();
+    	this.tfYop.setBounds(150,200,200,40);
+    	this.tfJournal = new JTextField();
+    	this.tfJournal.setBounds(150,250,200,40);
+    	this.tfJournal.setVisible(false);
     	
     	this.gui.add(lb1);
     	this.gui.add(lb2);
     	this.gui.add(lb3);
     	this.gui.add(lb4);
+    	this.gui.add(lb5);
     	
-    	this.gui.add(this.text1);
-    	this.gui.add(this.text2);
-    	this.gui.add(this.text3);
+    	this.gui.add(this.tfDoi);
+    	this.gui.add(this.tfTitle);
+    	this.gui.add(this.tfYop);
+    	this.gui.add(this.tfJournal);
     	
     	String publication_type[]={"Research Paper","Journal Article"};        
         cb = new JComboBox(publication_type);    
         cb.setBounds(150, 50,200,40);
+        cb.addActionListener(this);
         this.gui.add(cb);
     	
-    	JButton b=new JButton("click");//creating instance of JButton  
-    	b.setBounds(130,300,100, 40);//x axis, y axis, width, height  
+    	JButton b=new JButton("add");//creating instance of JButton  
+    	b.setBounds(80,305,100, 40);//x axis, y axis, width, height  
     	this.gui.add(b);//adding button in JFrame  
     	b.addActionListener(this);
     	
-    	JButton add_btn=new JButton("add");//creating instance of JButton  
-    	add_btn.setBounds(200,300,100, 40);//x axis, y axis, width, height  
+    	
+    	JButton add_btn=new JButton("cancel");//creating instance of JButton  
+    	add_btn.setBounds(280,305,100, 40);//x axis, y axis, width, height  
     	this.gui.add(add_btn);//adding button in JFrame  
     	add_btn.addActionListener(this);
+    	
     	
     	
     	this.gui.setTitle("create new Publication");        
     	this.gui.setSize(500,400);  
     	this.gui.setLayout(null); 
-    	this.gui.setVisible(true);//making the frame visible 
     	
     }
     
@@ -127,8 +138,7 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
      * @effects show <tt>gui</tt>
      */
     public void display() {
-        // TODO: complete this code
-    	createGUI();
+        if(this.gui != null) this.gui.setVisible(true);
     }
 
     /**
@@ -145,7 +155,11 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO: complete this code
+        
+    	Object source = e.getSource();
+    	if(source instanceof JButton){
+    		
+    	}
     	if(e.getActionCommand().equals("click")){
     		String infoMessage = "ahaha";
     		String titleBar = "ahihi";
@@ -155,6 +169,22 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
     	if(e.getActionCommand().equals("add")){
     		this.createPublication();
     	}
+    	
+    	if(e.getActionCommand().equals("cancel")) this.clearInput();
+    	
+    	else if(source instanceof JComboBox){
+    		JComboBox cb = (JComboBox)source;
+    		String publicationType = (String)cb.getSelectedItem();
+        	if(publicationType.equals("Journal Article")){
+        		this.tfJournal.setVisible(true);
+        		this.lb5.setVisible(true);
+        	}
+        	else{
+        		this.tfJournal.setVisible(false);
+        		this.lb5.setVisible(false);
+        	}
+    	}
+    	
     }
     
     /**
@@ -193,9 +223,9 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
      *          </pre>
      */
     private void createPublication() {
-    	String newDOI = this.text1.getText();
-    	String newTitle = this.text2.getText();
-    	int newYOP = Integer.valueOf(this.text3.getText());
+    	String newDOI = this.tfDoi.getText();
+    	String newTitle = this.tfTitle.getText();
+    	int newYOP = Integer.valueOf(this.tfYop.getText());
     	Publication publication = new Publication(newDOI,newTitle,newYOP);
 		this.publications.add(publication);
 		
@@ -207,7 +237,12 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
      * @effects clear form fields
      */
     private void clearInput() {
-        // TODO: complete this code
+        if((this.tfDoi != null) && (this.tfTitle != null) && (this.tfYop != null) && (this.tfJournal != null)){
+        	this.tfDoi.setText("");
+        	this.tfTitle.setText("");
+        	this.tfYop.setText("");
+        	this.tfJournal.setText("");
+        }
     }
 
     /**
@@ -216,7 +251,8 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
      */
     @Override
     public void windowClosing(WindowEvent e) {
-        // TODO: complete this code
+    	if(gui!= null) this.gui.setVisible(false);//making the frame visible 
+    	
     }
 
     /**
@@ -237,10 +273,11 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
 			
 			FileInputStream fi = new FileInputStream(new File(this.STORAGE_FILE));
 			ObjectInputStream oi = new ObjectInputStream(fi);
-
+			
 			// Read objects
 			this.publications = (ArrayList<Publication>) oi.readObject();
-			System.out.println(this.publications.size());
+			System.out.println("Starting up...");
+			System.out.println("PublicationManager.loaded ..." + this.publications.size()+ " objects");
 			oi.close();
 			fi.close();
 
@@ -273,6 +310,8 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
 			o = new ObjectOutputStream(f);
 			// Write objects to file
 			o.writeObject(this.publications);
+			System.out.println("Shutting down...");
+			System.out.println("PublicationManager.shutDown ...stored " + this.publications.size()+ " objects");
 			o.close();
 			f.close();
 		} catch (FileNotFoundException e) {
