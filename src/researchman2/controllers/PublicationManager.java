@@ -163,6 +163,7 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
      */
     public void showPublications() {
         // TODO: complete this code
+    	this.startUp();
     	JFrame report_gui = new JFrame();
     	SimplePublicationTableModel tableModel = new SimplePublicationTableModel(this.publications);
     	JTable jt=new JTable(tableModel);    
@@ -192,26 +193,12 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
      *          </pre>
      */
     private void createPublication() {
-    	Publication publication = new Publication(this.text1.getText(),this.text2.getText(),Integer.valueOf(this.text3.getText()));
+    	String newDOI = this.text1.getText();
+    	String newTitle = this.text2.getText();
+    	int newYOP = Integer.valueOf(this.text3.getText());
+    	Publication publication = new Publication(newDOI,newTitle,newYOP);
 		this.publications.add(publication);
-		FileOutputStream f;
-    	ObjectOutputStream o;
-		try {
-			f = new FileOutputStream(this.STORAGE_FILE);
-			o = new ObjectOutputStream(f);
-			// Write objects to file
-			o.writeObject(this.publications);
-			o.close();
-			f.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
-		 catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
     }
 
     /**
@@ -253,7 +240,7 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
 
 			// Read objects
 			this.publications = (ArrayList<Publication>) oi.readObject();
-			
+			System.out.println(this.publications.size());
 			oi.close();
 			fi.close();
 
@@ -279,7 +266,24 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
      */
     public void shutDown() {
     	
-
+    	FileOutputStream f;
+    	ObjectOutputStream o;
+		try {
+			f = new FileOutputStream(this.STORAGE_FILE);
+			o = new ObjectOutputStream(f);
+			// Write objects to file
+			o.writeObject(this.publications);
+			o.close();
+			f.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		 catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
     }
 }

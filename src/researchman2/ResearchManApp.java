@@ -35,7 +35,8 @@ public class ResearchManApp extends WindowAdapter implements ActionListener {
      *          {@link #createGUI()}: create <tt>gui</tt>
      */
     public ResearchManApp() {
-        // TODO: complete this code
+    	this.pman = new PublicationManager();
+    	this.createGUI();
     }
 
     /**
@@ -50,16 +51,15 @@ public class ResearchManApp extends WindowAdapter implements ActionListener {
      *          The action listener of the menu items is <tt>this</tt>.
      */
     public void createGUI() {
-        // TODO: complete this code
-    	
-    	gui = new JFrame();
+
+    	this.gui = new JFrame();
     	
     	JButton b=new JButton("click");//creating instance of JButton  
     	b.setBounds(130,100,100, 40);//x axis, y axis, width, height  
     	          
-    	gui.add(b);//adding button in JFrame  
-    	gui.setTitle("ResearchManApp2");        
-    	gui.setSize(400,500);//400 width and 500 height  
+    	this.gui.add(b);//adding button in JFrame  
+    	this.gui.setTitle("ResearchManApp2");        
+    	this.gui.setSize(400,500);//400 width and 500 height  
     	JMenu file_menu, publication_menu;  
         JMenuItem exit, all_publications, new_publication;  
     	JMenuBar mb=new JMenuBar();  
@@ -73,10 +73,10 @@ public class ResearchManApp extends WindowAdapter implements ActionListener {
         file_menu.add(exit); publication_menu.add(all_publications); publication_menu.add(new_publication);
         mb.add(file_menu);
         mb.add(publication_menu);
-        gui.setJMenuBar(mb);
+        this.gui.setJMenuBar(mb);
         b.addActionListener(this);
-        gui.setLayout(null);//using no layout managers 
-    	gui.setVisible(true);//making the frame visible 
+        this.gui.setLayout(null);//using no layout managers 
+    	 
     	
     }
 
@@ -84,8 +84,7 @@ public class ResearchManApp extends WindowAdapter implements ActionListener {
      * @effects show <tt>gui</tt>
      */
     public void display() {
-        // TODO: complete this code
-    	createGUI();
+    	this.gui.setVisible(true);//making the frame visible
     }
     
     /**
@@ -93,7 +92,7 @@ public class ResearchManApp extends WindowAdapter implements ActionListener {
      */
     @Override
     public void windowClosing(WindowEvent e) {
-        // TODO: complete this code
+        this.shutDown();
     }
 
     /**
@@ -133,8 +132,8 @@ public class ResearchManApp extends WindowAdapter implements ActionListener {
      * @effects start up <tt>pman</tt>
      */
     public void startUp() {
-        // TODO: complete this code
-    	pman = new PublicationManager();
+        this.pman.startUp();
+    	
     }
 
     /**
@@ -142,7 +141,8 @@ public class ResearchManApp extends WindowAdapter implements ActionListener {
      *          dispose <tt>gui</tt> and end the program.
      */
     public void shutDown() {
-        // TODO: complete this code
+        this.pman.shutDown();
+        this.gui.dispose();
     }
 
     /**
