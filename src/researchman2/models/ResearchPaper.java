@@ -27,6 +27,6 @@ public class ResearchPaper extends Publication implements Comparable<Publication
 
 	@Override
 	public int compareTo(Publication o) {
-		return title.compareTo(o.title);
+		return this.title.compareTo(o.title);
 	}
 }

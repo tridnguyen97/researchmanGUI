@@ -1,5 +1,7 @@
 package researchman2.models;
 
+import java.io.Serializable;
+
 import researchman2.DomainConstraint;
 import researchman2.DomainConstraint.Type;
 /**
@@ -15,7 +17,7 @@ import researchman2.DomainConstraint.Type;
  *
  */
 
-public class Publication {
+public class Publication implements Serializable {
 	private final int LENGTH_DOI = 20;
 	private final int LENGTH_title = 50;
 	private final int MIN_YOP = 0;
@@ -46,7 +48,7 @@ public class Publication {
      */
 	
 	public String getDOI() {
-		return DOI;
+		return this.DOI;
 	}
     
 	/**
@@ -55,7 +57,7 @@ public class Publication {
      */
 	
 	public String getTitle() {
-		return title;
+		return this.title;
 	}
 	
 	/**
@@ -64,7 +66,7 @@ public class Publication {
      */
     
 	public int getYOP() {
-		return yop;
+		return this.yop;
 	}
     
 	/**
@@ -140,7 +142,7 @@ public class Publication {
      * @Effects if this is valid with regards to abstract properties return all attributes
      */  
     public boolean repOK(){
-        return validTitle(title)&&validDOI(DOI)&&validYOP(yop);
+        return validTitle(this.title)&&validDOI(this.DOI)&&validYOP(this.yop);
     }
     
     /**

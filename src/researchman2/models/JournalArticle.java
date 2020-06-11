@@ -34,7 +34,7 @@ public class JournalArticle extends Publication implements Comparable<Publicatio
      */
 	
 	public String getJournalTitle(){
-		return journal_title;
+		return this.journal_title;
 	}
 	
 	/**
@@ -57,7 +57,7 @@ public class JournalArticle extends Publication implements Comparable<Publicatio
 
 	@Override
 	public int compareTo(Publication o) {
-		return title.compareTo(o.title);
+		return this.title.compareTo(o.title);
 	}
 	
 }

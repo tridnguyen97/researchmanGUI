@@ -9,6 +9,7 @@ import java.awt.event.WindowEvent;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -29,6 +30,7 @@ import javax.swing.JTextField;
 import researchman2.NotPossibleException;
 import researchman2.models.Publication;
 import researchman2.models.ResearchPaper;
+import researchman2.models.SimplePublicationTableModel;
 import researchman2.models.JournalArticle;
 
 /**
@@ -47,11 +49,13 @@ import researchman2.models.JournalArticle;
 public class PublicationManager extends WindowAdapter implements ActionListener {
     private final String STORAGE_FILE = "publications.dat";
 
-    private ArrayList<Publication> publications;
+    private ArrayList<Publication> publications = new ArrayList<Publication>();
 
     // view components
     private JFrame gui;
     // more view components here
+    JTextField text1,text2,text3;
+    JComboBox cb;
 
     /**
      * @effects initialise <tt>this</tt> with an empty set of publications <br>
@@ -68,9 +72,8 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
      */
     public void createGUI() {
         // TODO: complete this code
-    	gui = new JFrame();
+    	this.gui = new JFrame();
     	JLabel lb1,lb2,lb3,lb4;
-    	JTextField text1,text2,text3;
     	lb1 = new JLabel("Publication type:");
     	lb1.setBounds(10,50,100,40);
     	lb2 = new JLabel("Doi: (*)");
@@ -80,36 +83,42 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
     	lb4 = new JLabel("Year of publication: (*)");
     	lb4.setBounds(10,200,150,40);
 
-    	text1 = new JTextField();
-    	text1.setBounds(150,100,200,40);
-    	text2 = new JTextField();
-    	text2.setBounds(150,150,200,40);
-    	text3 = new JTextField();
-    	text3.setBounds(150,200,200,40);
+    	this.text1 = new JTextField();
+    	this.text1.setBounds(150,100,200,40);
+    	this.text2 = new JTextField();
+    	this.text2.setBounds(150,150,200,40);
+    	this.text3 = new JTextField();
+    	this.text3.setBounds(150,200,200,40);
     	
-    	gui.add(lb1);
-    	gui.add(lb2);
-    	gui.add(lb3);
-    	gui.add(lb4);
+    	this.gui.add(lb1);
+    	this.gui.add(lb2);
+    	this.gui.add(lb3);
+    	this.gui.add(lb4);
     	
-    	gui.add(text1);
-    	gui.add(text2);
-    	gui.add(text3);
+    	this.gui.add(this.text1);
+    	this.gui.add(this.text2);
+    	this.gui.add(this.text3);
     	
     	String publication_type[]={"Research Paper","Journal Article"};        
-        JComboBox cb=new JComboBox(publication_type);    
+        cb = new JComboBox(publication_type);    
         cb.setBounds(150, 50,200,40);
-        gui.add(cb);
+        this.gui.add(cb);
     	
     	JButton b=new JButton("click");//creating instance of JButton  
     	b.setBounds(130,300,100, 40);//x axis, y axis, width, height  
-    	gui.add(b);//adding button in JFrame  
+    	this.gui.add(b);//adding button in JFrame  
     	b.addActionListener(this);
     	
-    	gui.setTitle("create new Publication");        
-    	gui.setSize(500,400);  
-    	gui.setLayout(null); 
-    	gui.setVisible(true);//making the frame visible 
+    	JButton add_btn=new JButton("add");//creating instance of JButton  
+    	add_btn.setBounds(200,300,100, 40);//x axis, y axis, width, height  
+    	this.gui.add(add_btn);//adding button in JFrame  
+    	add_btn.addActionListener(this);
+    	
+    	
+    	this.gui.setTitle("create new Publication");        
+    	this.gui.setSize(500,400);  
+    	this.gui.setLayout(null); 
+    	this.gui.setVisible(true);//making the frame visible 
     	
     }
     
@@ -144,20 +153,7 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
     	}
     	
     	if(e.getActionCommand().equals("add")){
-    		try (FileOutputStream fos = new FileOutputStream(STORAGE_FILE);
-    	             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-
-    	            // Create a Book instance. This book object then will be stored in
-    	            // the file.
-    	            Publication book = new Publication("0-07-222565-3","Hacking Exposed J2EE & Java",1);
-
-    	            // By using writeObject() method of the ObjectOutputStream we can
-    	            // make the book object persistent on the books.dat file.
-    	            oos.writeObject(book);
-    	        } catch (IOException err) {
-    	            err.printStackTrace();
-    	        }
-
+    		this.createPublication();
     	}
     }
     
@@ -168,13 +164,12 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
     public void showPublications() {
         // TODO: complete this code
     	JFrame report_gui = new JFrame();
-    	  String data[][]={};    
-String column[]={"#","Doi","Title","Year of publication","Journal"};         
-JTable jt=new JTable(data,column);    
-JScrollPane sp=new JScrollPane(jt);
+    	SimplePublicationTableModel tableModel = new SimplePublicationTableModel(this.publications);
+    	JTable jt=new JTable(tableModel);    
+    	JScrollPane sp=new JScrollPane(jt);
 
-sp.setBounds(30,40,400,500);          
-report_gui.add(sp);  
+    	sp.setBounds(30,40,400,500);          
+    	report_gui.add(sp);  
     	JButton b=new JButton("click");//creating instance of JButton  
     	b.setBounds(130,100,100, 40);//x axis, y axis, width, height  
         
@@ -197,7 +192,26 @@ report_gui.add(sp);
      *          </pre>
      */
     private void createPublication() {
-        // TODO: complete this code
+    	Publication publication = new Publication(this.text1.getText(),this.text2.getText(),Integer.valueOf(this.text3.getText()));
+		this.publications.add(publication);
+		FileOutputStream f;
+    	ObjectOutputStream o;
+		try {
+			f = new FileOutputStream(this.STORAGE_FILE);
+			o = new ObjectOutputStream(f);
+			// Write objects to file
+			o.writeObject(this.publications);
+			o.close();
+			f.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		 catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     /**
@@ -232,8 +246,29 @@ report_gui.add(sp);
      *          </pre>
      */
     public void startUp() {
-        // TODO: complete this code
-    }
+        try {
+			
+			FileInputStream fi = new FileInputStream(new File(this.STORAGE_FILE));
+			ObjectInputStream oi = new ObjectInputStream(fi);
+
+			// Read objects
+			this.publications = (ArrayList<Publication>) oi.readObject();
+			
+			oi.close();
+			fi.close();
+
+		} catch (FileNotFoundException e) {
+			System.out.println("File not found");
+		} catch (IOException e) {
+			System.out.println("Error initializing stream");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+    
 
     /**
      * @requires <tt>gui != null</tt>
@@ -243,6 +278,8 @@ report_gui.add(sp);
      *          clear <tt>publications</tt> and shutdown the application
      */
     public void shutDown() {
-        // TODO: complete this code
+    	
+
+
     }
 }
