@@ -93,11 +93,18 @@ public class Publication implements Serializable {
 		this.title = title;
 	}
 	
+	public void setJournalTitle(String journal_title){
+		
+	}
+	
+	public String getJournalTitle(){
+		return "";
+	}
 	/**
      * 
      * @Effect if title is valid return true, else return false
      */
-    private boolean validTitle(String title){
+    protected boolean validTitle(String title){
         if(title== null || title.length() == 0 || title.length()>LENGTH_title){
             return false;
         }else{
@@ -109,8 +116,8 @@ public class Publication implements Serializable {
      * 
      * @Effect if year of publish is valid return true, else return false
      */
-    private boolean validYOP(int yop){
-        if(yop<MIN_YOP && yop > MAX_YOP){
+    protected boolean validYOP(int yop){
+        if(yop<MIN_YOP || yop > MAX_YOP){
             return false;
         }else{
             return true;
@@ -121,7 +128,7 @@ public class Publication implements Serializable {
      * 
      * @Effect if DOI is valid return true, else return false
      */
-    private boolean validDOI(String DOI){
+    protected boolean validDOI(String DOI){
     	if(DOI== null || DOI.length() == 0 || DOI.length()>LENGTH_title){
             return false;
         }else{
@@ -133,8 +140,19 @@ public class Publication implements Serializable {
      * 
      * @Effect if all title, DOI and year of birth is valid return true, else return false
      */
-    private boolean validate(String title, String DOI, int yop){
+    public boolean validate(String title, String DOI, int yop){
+    	System.out.println(validTitle(title));
+    	System.out.println(validDOI(DOI));
+    	System.out.println(validYOP(yop));
         return validTitle(title)&&validDOI(DOI)&&validYOP(yop);
+    }
+    
+    /**
+     * 
+     * @Effect if all title, DOI and year of birth is valid return true, else return false
+     */
+    public boolean validate(String title, String DOI, int yop, String journal_title){
+        return true;
     }
     
     /**

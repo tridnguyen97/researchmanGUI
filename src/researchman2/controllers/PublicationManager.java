@@ -157,14 +157,6 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
     public void actionPerformed(ActionEvent e) {
         
     	Object source = e.getSource();
-    	if(source instanceof JButton){
-    		
-    	}
-    	if(e.getActionCommand().equals("click")){
-    		String infoMessage = "ahaha";
-    		String titleBar = "ahihi";
-    		JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
-    	}
     	
     	if(e.getActionCommand().equals("add")){
     		this.createPublication();
@@ -172,7 +164,7 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
     	
     	if(e.getActionCommand().equals("cancel")) this.clearInput();
     	
-    	else if(source instanceof JComboBox){
+    	if(source instanceof JComboBox){
     		JComboBox cb = (JComboBox)source;
     		String publicationType = (String)cb.getSelectedItem();
         	if(publicationType.equals("Journal Article")){
@@ -192,14 +184,12 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
      *  and show that <tt>reportGUI</tt>
      */
     public void showPublications() {
-        // TODO: complete this code
-    	this.startUp();
-    	JFrame report_gui = new JFrame();
+        JFrame report_gui = new JFrame();
     	SimplePublicationTableModel tableModel = new SimplePublicationTableModel(this.publications);
     	JTable jt=new JTable(tableModel);    
     	JScrollPane sp=new JScrollPane(jt);
 
-    	sp.setBounds(30,40,400,500);          
+    	sp.setBounds(0,0,600,300);          
     	report_gui.add(sp);  
     	JButton b=new JButton("click");//creating instance of JButton  
     	b.setBounds(130,100,100, 40);//x axis, y axis, width, height  
@@ -207,7 +197,7 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
     	//report_gui.add(table);
     	report_gui.add(b);//adding button in JFrame  
     	report_gui.setTitle("show all Publications");        
-    	report_gui.setSize(400,500);//400 width and 500 height  
+    	report_gui.setSize(600,300);//400 width and 500 height  
     	report_gui.setLayout(null);//using no layout managers 
     	report_gui.setVisible(true);//making the frame visible 
     }
@@ -225,10 +215,47 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
     private void createPublication() {
     	String newDOI = this.tfDoi.getText();
     	String newTitle = this.tfTitle.getText();
-    	int newYOP = Integer.valueOf(this.tfYop.getText());
-    	Publication publication = new Publication(newDOI,newTitle,newYOP);
-		this.publications.add(publication);
-		
+    	int newYOP = -1;
+    	try{
+    		newYOP = Integer.valueOf(this.tfYop.getText());
+    	}
+    	catch(NumberFormatException nfe) {
+    		String infoMessage = "Please input the valid year";
+    		String titleBar = "Create new publication";
+    		JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.ERROR_MESSAGE);
+    	}
+    	if(this.tfJournal.isVisible()){
+			String newJournal = this.tfJournal.getText();
+			Publication journal_article = new JournalArticle(newDOI,newTitle,newYOP,newJournal);
+			if(journal_article.validate(newDOI,newTitle,newYOP,newJournal)){
+				this.publications.add(journal_article);
+				String infoMessage = "Created publication - JournalArticle" + journal_article.toString();
+	    		String titleBar = "Message";
+	    		JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
+			}	
+			else{
+				String infoMessage = "Invalid input! Please check again(fields with * is required)";
+	    		String titleBar = "Error";
+	    		JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.ERROR_MESSAGE);
+			}
+    	} 
+    	else{
+    		
+    		Publication research_paper = new ResearchPaper(newDOI,newTitle,newYOP);
+    		if(research_paper.validate(newDOI,newTitle,newYOP)){
+    			this.publications.add(research_paper);
+    			String infoMessage = "Created publication - ResearchPaper" + research_paper.toString();
+	    		String titleBar = "Message";
+	    		JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
+
+    		}
+    		else{
+				String infoMessage = "Invalid input! Please check again(fields with * is required)";
+	    		String titleBar = "Error";
+	    		JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.ERROR_MESSAGE);
+			}
+    		
+    	}
     }
 
     /**
@@ -284,7 +311,7 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
 		} catch (FileNotFoundException e) {
 			System.out.println("File not found");
 		} catch (IOException e) {
-			System.out.println("Error initializing stream");
+			System.out.println("Error initializing input stream");
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -320,9 +347,9 @@ public class PublicationManager extends WindowAdapter implements ActionListener 
 		}
 		
 		 catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Error initializing output stream");
 		}
-
+		this.gui.dispose();
+		this.publications = null;
     }
 }

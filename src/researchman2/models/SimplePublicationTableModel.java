@@ -3,7 +3,7 @@ package researchman2.models;
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 public class SimplePublicationTableModel extends AbstractTableModel {
-   private String columnNames[]={"Doi","Title","Year of publication"};         
+   private String columnNames[]={"#","Doi","Title","Year of publication","Journal title"};         
    private ArrayList<Publication> myList;
    public SimplePublicationTableModel(ArrayList<Publication> pubList) {
       myList = pubList;
@@ -24,14 +24,22 @@ public class SimplePublicationTableModel extends AbstractTableModel {
    public Object getValueAt(int row, int col) {
       Object temp = null;
       if (col == 0) {
-         temp = myList.get(row).getDOI();
+    	 temp = (Integer) myList.indexOf(myList.get(row));
       }
       else if (col == 1) {
-         temp = myList.get(row).getTitle();
+    	 temp = myList.get(row).getDOI();
       }
       else if (col == 2) {
-         temp = Integer.valueOf(myList.get(row).getYOP());
-      }
+    	  temp = myList.get(row).getTitle();
+          }
+      
+      else if (col == 3) {
+    	  temp = Integer.valueOf(myList.get(row).getYOP());
+       }
+      else if (col == 4) {
+    	   temp = myList.get(row).getJournalTitle();
+       }
+      
       
       return temp;
    }
@@ -40,8 +48,8 @@ public class SimplePublicationTableModel extends AbstractTableModel {
       return columnNames[col];
    }
    public Class getColumnClass(int col) {
-      if (col == 2) {
-         return Double.class;
+      if (col == 0) {
+         return Integer.class;
       }
       else {
          return String.class;

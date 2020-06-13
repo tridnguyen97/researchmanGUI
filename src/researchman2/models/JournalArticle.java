@@ -32,7 +32,7 @@ public class JournalArticle extends Publication implements Comparable<Publicatio
 	/**
      * @effects  return title of the Journal Article 
      */
-	
+	@Override
 	public String getJournalTitle(){
 		return this.journal_title;
 	}
@@ -41,13 +41,30 @@ public class JournalArticle extends Publication implements Comparable<Publicatio
      * @modifies this.journal_title
      * @effects  set value for title for the JournalArticle 
      */
-	
+	@Override
 	public void setJournalTitle(String journal_title){
 		this.journal_title = journal_title;
 	}
 	/**
      * @effects  return string format of the JournalArticle object 
      */
+	
+	private boolean validJournalTitle(String journal_title){
+		if(journal_title== null || journal_title.length() == 0){
+            return false;
+        }else{
+            return true;
+        }
+	}
+
+	 /**
+     * 
+     * @Effect if all title, DOI and year of birth and journal title is valid return true, else return false
+     */
+	@Override
+    public boolean validate(String title, String DOI, int yop, String journal_title){
+        return validTitle(title)&&validDOI(DOI)&&validYOP(yop)&&validJournalTitle(journal_title);
+    }
 	
 	@Override
 	public String toString() {
